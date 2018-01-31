@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/register_activity"
     tools:context="com.app.owly.login.RegisterActivity">
 
 
@@ -40,4 +42,10 @@
         android:inputType="textPassword"
         android:hint="@string/password" />
 
-</android.widget.LinearLayout>
+    <Button
+        android:id="@+id/register_register_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register" />
+
+</android.widget.RelativeLayout>
