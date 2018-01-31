@@ -1,26 +1,21 @@
 package com.app.owly.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout;
 
 import com.app.owly.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.app.owly.login.User;
+import org.apache.commons.lang3.StringUtils;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -38,13 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
 
     private DatabaseReference databaseMainUsers;
-    private EditText email, password, username, confirmEmailEditText, confirmPasswordEditText;
+    private EditText email, password, username, confirmEmail, confirmPassword;
     private String inputUsername, inputEmail, inputConfirmEmail, inputPassword, inputConfirmPassword;
-    private TextView title;
     private Button register;
-    private RelativeLayout registerLayout;
-    private LayoutInflater inflater;
-    private View confirmEmail, confirmPassword;
     private ProgressBar progressBar;
 
 
@@ -56,49 +47,51 @@ public class RegisterActivity extends AppCompatActivity {
         // View elements present from the start
         username = (EditText) findViewById(R.id.register_username);
         email = (EditText) findViewById(R.id.register_email);
+        confirmEmail = (EditText) findViewById(R.id.register_confirm_email);
         password = (EditText) findViewById(R.id.register_password);
+        confirmPassword = (EditText) findViewById(R.id.register_confirm_password);
         register = (Button) findViewById(R.id.register_confirm_btn);
         progressBar = (ProgressBar) findViewById(R.id.register_progress);
-
-
-        // View element that appears as/after the user filling info
-        registerLayout = findViewById(R.id.register_activity);
-        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        confirmEmail = inflater.inflate(R.layout.confirm_email, null);
-        confirmPassword = inflater.inflate(R.layout.confirm_password, null);
-
-        // Get EditText elements after they appear
-        confirmEmailEditText = findViewById(R.id.register_confirm_email);
-        confirmPasswordEditText = findViewById(R.id.register_confirm_password);
-
 
         // Data entered by user
         inputUsername = username.getText().toString();
         inputEmail = email.getText().toString();
+        inputConfirmEmail = confirmEmail.getText().toString();
         inputPassword = password.getText().toString();
-        inputConfirmPassword = confirmPasswordEditText.getText().toString();
-        inputConfirmEmail = confirmEmailEditText.getText().toString();
+        inputConfirmPassword = confirmPassword.getText().toString();
+
+        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(!hasFocus){
+                    String input = username.getText().toString().toLowerCase();
+                    username.setText(StringUtils.capitalize(input));
+                }
+            }
+        });
 
         email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-               if(!hasFocus){
-                   if(isEmpty(inputEmail)){
-                       try {
-                           registerLayout.removeView((View) confirmEmail.getParent());
-                       } catch (Exception e) {
-                           e.printStackTrace();
-                       }
-                   }else{
-                       // add the rule that places your button below your EditText object
-                       confirmEmail.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.BELOW, email.getId()));
-                       registerLayout.addView(confirmEmail);
-                   }
-               }
+                if(!hasFocus){
+                    String input = email.getText().toString().toLowerCase();
+                    email.setText(input);
+                }
             }
         });
 
-        confirmEmailEditText.addTextChangedListener(new TextWatcher() {
+        confirmEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if(!hasFocus){
+                    String input = confirmEmail.getText().toString().toLowerCase();
+                    confirmEmail.setText(input);
+                }
+            }
+        });
+
+
+        confirmEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -106,13 +99,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(inputConfirmEmail == inputEmail){
-                    try {
-                        registerLayout.removeView((View) confirmEmail.getParent());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
+                String confirmInput = String.valueOf(charSequence);
+                String input = email.getText().toString().toLowerCase();
+                if(confirmInput.toLowerCase().equals(input.toLowerCase())){
+                    confirmEmail.setVisibility(View.GONE);
+                    password.requestFocus();
+                }
+                if(!confirmInput.toLowerCase().equals(input.toLowerCase())){
+                    confirmEmail.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -122,27 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if(!hasFocus){
-                    if(isEmpty(inputPassword)){
-                        try {
-                            registerLayout.removeView((View) confirmPassword.getParent());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }else{
-                        // add the rule that places your button below your EditText object
-                        confirmPassword.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.BELOW, password.getId()));
-                        registerLayout.addView(confirmPassword);
-                    }
-                }
-            }
-        });
-
-        confirmPasswordEditText.addTextChangedListener(new TextWatcher() {
+        confirmPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -150,13 +124,70 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(inputConfirmPassword == inputPassword){
-                    try {
-                        registerLayout.removeView((View) confirmPassword.getParent());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                String confirmInput = String.valueOf(charSequence);
+                String input = password.getText().toString();
+                if(confirmInput.equals(input)){
+                    confirmPassword.setVisibility(View.GONE);
+                    password.requestFocus();
+                }
+                if(!confirmInput.equals(input)){
+                    confirmPassword.setVisibility(View.VISIBLE);
+                }
+            }
 
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String input = String.valueOf(charSequence);
+                String confirmInput = confirmEmail.getText().toString();
+                if (isEmpty(confirmInput) && isAnEmail(input)){
+                    confirmEmail.setVisibility(View.VISIBLE);
+                }else if(isEmpty(input)){
+                    confirmEmail.setVisibility(View.GONE);
+                    confirmEmail.setText("");
+                }else if(confirmInput.toLowerCase().equals(input.toLowerCase())){
+                    confirmEmail.setVisibility(View.GONE);
+                    confirmPassword.requestFocus();
+                }else if (!isEmpty(confirmInput)){
+                    confirmEmail.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String input = String.valueOf(charSequence);
+                String confirmInput = confirmPassword.getText().toString();
+                if (isEmpty(confirmInput) && !isEmpty(input)){
+                    confirmPassword.setVisibility(View.VISIBLE);
+                }else if(isEmpty(input)){
+                    confirmPassword.setVisibility(View.GONE);
+                    confirmPassword.setText("");
+                }else if(!isEmpty(confirmInput) && confirmInput.equals(input)){
+                    confirmPassword.setVisibility(View.GONE);
+                }else if (!isEmpty(confirmInput) && !input.equals(confirmInput)){
+                    confirmPassword.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -171,13 +202,11 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validate()){
-                    registerNewEmail(inputEmail, inputPassword);
-                }
+                hideSoftKeyboard();
+                validate();
             }
         });
 
-        hideSoftKeyboard();
     }
 
     private void registerNewEmail(final String email, String password){
@@ -212,29 +241,47 @@ public class RegisterActivity extends AppCompatActivity {
         return string.equals("");
     }
 
-    private boolean validate(){
+    private void validate(){
+        Log.d(TAG, "Inside validate");
+        inputUsername = username.getText().toString();
+        inputEmail = email.getText().toString();
+        inputConfirmEmail = confirmEmail.getText().toString();
+        inputPassword = password.getText().toString();
+        inputConfirmPassword = confirmPassword.getText().toString();
+        Log.d(TAG, "inputUsername: " + inputUsername);
+        Log.d(TAG, "inputEmail: " + inputEmail);
+        Log.d(TAG, "inputConfirmEmail: " + inputConfirmEmail);
+        Log.d(TAG, "inputPassword: " + inputPassword);
+        Log.d(TAG, "inputConfirmPassword: " + confirmPassword);
+
+
+
         if (isEmpty(inputUsername)) {
+            Log.d(TAG, "Inside validate 2");
             Toast.makeText(RegisterActivity.this, "You must enter a username.", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (isEmpty(inputEmail)) {
+            Log.d(TAG, "Inside validate 3");
             Toast.makeText(RegisterActivity.this, "You must enter an email.", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (isEmpty(inputConfirmEmail)) {
+            Log.d(TAG, "Inside validate 4");
             Toast.makeText(RegisterActivity.this, "You must confirm your email", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (isEmpty(inputPassword)) {
+            Log.d(TAG, "Inside validate 5");
             Toast.makeText(RegisterActivity.this, "You must enter a password.", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (isEmpty(inputConfirmPassword)) {
+            Log.d(TAG, "Inside validate 6");
             Toast.makeText(RegisterActivity.this, "You must confirm your password.", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (!inputConfirmEmail.equals(inputEmail)) {
+            Log.d(TAG, "Inside validate 7");
             Toast.makeText(RegisterActivity.this, "Your emails do not match.", Toast.LENGTH_SHORT).show();
-            return false;
         } else if (!inputConfirmPassword.equals(inputPassword)) {
+            Log.d(TAG, "Inside validate 8");
             Toast.makeText(RegisterActivity.this, "Your passwords do not match.", Toast.LENGTH_SHORT).show();
+        }else{
+            Log.d(TAG, "Validation passed");
+            registerNewEmail(inputEmail, inputPassword);
         }
-        return true;
+
 
     }
 
@@ -254,15 +301,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void redirectLoginScreen(){
+        Log.d(TAG, "Inside redirectLoginScreen");
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
     private void addUserToDatabase() {
+        Log.d(TAG, "Inside addUserToDatabase");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null){
+            Log.d(TAG, "User is logged in");
             String uid = user.getUid();
             String email = user.getEmail();
             String userName = inputUsername;
@@ -279,6 +329,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void sendVerificationEmail(){
+        Log.d(TAG, "Inside sendVerificationEmail");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user != null){
@@ -295,5 +346,9 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private boolean isAnEmail(String target){
+        return Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 }

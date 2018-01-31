@@ -7,7 +7,8 @@
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="confirm_email">Confirm Email</string>
-    <string name="password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Email</string>
     <string name="register">Register</string>
     <string name="already_registered">Already one of us?</string>
     <string name="welcome_back">Welcome Back</string>
