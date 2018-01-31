@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1066763417571",
+    "firebase_url": "https://androidstudio-e703a.firebaseio.com",
+    "project_id": "androidstudio-e703a",
+    "storage_bucket": "androidstudio-e703a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066763417571:android:9102c5f4cc856682",
+        "android_client_info": {
+          "package_name": "com.app.owly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066763417571-f8vvecjv6hg4tj9kdib256mf5c35qi02.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.owly",
+            "certificate_hash": "ad7bfe4045b454ab7efae0dbcf265a28e0cb36b8"
+          }
+        },
+        {
+          "client_id": "1066763417571-lrd6pk3ki3jism31j736nbrhiu8erli2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe5MlGE06vsyL-ysajoB_lY8RwIdt9d3M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066763417571-lrd6pk3ki3jism31j736nbrhiu8erli2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
