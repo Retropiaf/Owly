@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.app.owly.login.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -56,8 +57,8 @@ public class RegisterActivity extends AppCompatActivity {
         username = (EditText) findViewById(R.id.register_username);
         email = (EditText) findViewById(R.id.register_email);
         password = (EditText) findViewById(R.id.register_password);
-        register = (Button) findViewById(R.id.register_register_btn);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        register = (Button) findViewById(R.id.register_confirm_btn);
+        progressBar = (ProgressBar) findViewById(R.id.register_progress);
 
 
         // View element that appears as/after the user filling info
@@ -266,10 +267,7 @@ public class RegisterActivity extends AppCompatActivity {
             String email = user.getEmail();
             String userName = inputUsername;
 
-            //String id = databaseMainUsers.push().getKey();
-            MainUser mainUser = new MainUser(uid, email, userName);
-
-            databaseMainUsers.child(uid).setValue(mainUser);
+            User.writeNewUser(uid, userName, email);
 
         }else{
             Log.d(TAG, "addUserToDatabase: failed to add main user to the database ");
@@ -277,6 +275,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
+
 
     private void sendVerificationEmail(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
