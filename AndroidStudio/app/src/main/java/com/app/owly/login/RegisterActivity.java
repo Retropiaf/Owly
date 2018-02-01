@@ -159,7 +159,10 @@ public class RegisterActivity extends AppCompatActivity {
                     confirmEmail.setText("");
                 }else if(confirmInput.toLowerCase().equals(input.toLowerCase())){
                     confirmEmail.setVisibility(View.GONE);
+
+                    RegisterActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                     confirmPassword.requestFocus();
+
                 }else if (!isEmpty(confirmInput)){
                     confirmEmail.setVisibility(View.VISIBLE);
                 }

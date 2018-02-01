@@ -30,6 +30,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     DatabaseReference database;
+    FirebaseUser user;
     private FirebaseAuth.AuthStateListener authListener;
     private EditText email, password;
     private ProgressBar progressBar;
@@ -42,6 +43,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
 
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
@@ -63,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "onClick: attempting to authenticate.");
 
                     showDialog();
+
+
 
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -112,7 +118,6 @@ public class LoginActivity extends AppCompatActivity {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user != null){
 
                     final String uid = user.getUid();
@@ -168,6 +173,16 @@ public class LoginActivity extends AppCompatActivity {
         resendEmailVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                user.sendEmailVerification()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(LoginActivity.this, "Email sent! Check your inbox.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
             }
         });

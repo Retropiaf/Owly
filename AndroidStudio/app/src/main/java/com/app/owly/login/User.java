@@ -22,7 +22,7 @@ public class User {
     public String username;
     public String email;
     public Boolean isRegistered;
-    public Boolean isSignedIn;
+    // public Boolean isSignedIn;
     public Boolean onGoingSession;
     public Boolean isNotified;
     public Boolean insideSession;
@@ -40,7 +40,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.isRegistered = false;
-        this.isSignedIn = false;
+        //this.isSignedIn = false;
         this.onGoingSession = false;
         this.isNotified = false;
         this.insideSession = false;
