@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
+            android:id="@+id/sleep_sessions_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -41,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/sleep_circles_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -64,6 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/top_left">
 
         <Button
+            android:id="@+id/add_sleep_circle_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -87,6 +89,7 @@
         app:layout_constraintTop_toBottomOf="@+id/top_right">
 
         <Button
+            android:id="@+id/user_account_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
@@ -101,7 +104,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/new_sleep_btn"
+        android:id="@+id/new_sleep_layout"
         android:layout_width="187dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -113,6 +116,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
+            android:id="@+id/new_sleep_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="test"
