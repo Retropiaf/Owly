@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
 
     DatabaseReference database;
     FirebaseUser user;
+    private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authListener;
     private EditText email, password;
     private ProgressBar progressBar;
@@ -44,8 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
+        auth = FirebaseAuth.getInstance();
 
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
@@ -68,9 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     showDialog();
 
-
-
-                    FirebaseAuth.getInstance().signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    auth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             hideDialog();
@@ -118,9 +116,8 @@ public class LoginActivity extends AppCompatActivity {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if(user != null){
-
-                    final String uid = user.getUid();
 
                     if(user.isEmailVerified()){
                         Log.d(TAG, "inside setupFirebaseAuth");
@@ -189,8 +186,6 @@ public class LoginActivity extends AppCompatActivity {
 
         hideSoftKeyboard();
     }
-
-
 
 
 

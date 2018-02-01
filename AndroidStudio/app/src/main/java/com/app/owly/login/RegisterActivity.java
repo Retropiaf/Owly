@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "RegisterActivity";
 
     private DatabaseReference databaseMainUsers;
+    private FirebaseAuth auth;
     private EditText email, password, username, confirmEmail, confirmPassword;
     private String inputUsername, inputEmail, inputConfirmEmail, inputPassword, inputConfirmPassword;
     private Button register;
@@ -44,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        auth = FirebaseAuth.getInstance();
 
         // View elements present from the start
         username = (EditText) findViewById(R.id.register_username);
@@ -221,33 +224,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void registerNewEmail(final String email, String password){
-
-        showDialog();
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()) {
-
-                    addUserToDatabase();
-                    sendVerificationEmail();
-                    FirebaseAuth.getInstance().signOut();
-
-                    //redirect the user to the login screen
-                    redirectLoginScreen();
-                } else {
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(RegisterActivity.this, "Sorry, we were unable to register you.", Toast.LENGTH_SHORT).show();
-                }
-                hideDialog();
-            }
-
-        });
-
-
-    }
-
 
     private boolean isEmpty(String string){
         return string.equals("");
@@ -265,8 +241,6 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d(TAG, "inputConfirmEmail: " + inputConfirmEmail);
         Log.d(TAG, "inputPassword: " + inputPassword);
         Log.d(TAG, "inputConfirmPassword: " + confirmPassword);
-
-
 
         if (isEmpty(inputUsername)) {
             Log.d(TAG, "Inside validate 2");
@@ -293,6 +267,32 @@ public class RegisterActivity extends AppCompatActivity {
             Log.d(TAG, "Validation passed");
             registerNewEmail(inputEmail, inputPassword);
         }
+
+    }
+
+    private void registerNewEmail(final String email, String password){
+
+        showDialog();
+
+        auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
+
+                    addUserToDatabase();
+                    sendVerificationEmail();
+                    FirebaseAuth.getInstance().signOut();
+
+                    //redirect the user to the login screen
+                    redirectLoginScreen();
+                } else {
+                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                    Toast.makeText(RegisterActivity.this, "Sorry, we were unable to register you.", Toast.LENGTH_SHORT).show();
+                }
+                hideDialog();
+            }
+
+        });
 
 
     }
