@@ -36,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email, password, username, confirmEmail, confirmPassword;
     private String inputUsername, inputEmail, inputConfirmEmail, inputPassword, inputConfirmPassword;
     private Button register;
+    private TextView login;
     private ProgressBar progressBar;
 
 
@@ -51,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.register_password);
         confirmPassword = (EditText) findViewById(R.id.register_confirm_password);
         register = (Button) findViewById(R.id.register_confirm_btn);
+        login = findViewById(R.id.register_login);
         progressBar = (ProgressBar) findViewById(R.id.register_progress);
 
         // Data entered by user
@@ -204,6 +206,13 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 hideSoftKeyboard();
                 validate();
+            }
+        });
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
 

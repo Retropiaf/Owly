@@ -72,6 +72,12 @@
         android:text="@string/register"
         android:layout_below="@+id/register_password" />
 
+    <TextView
+        android:id="@+id/register_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/already_registered" />
+
     <ProgressBar
         android:id="@+id/register_progress"
         style="?android:attr/progressBarStyle"

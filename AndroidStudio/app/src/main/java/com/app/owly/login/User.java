@@ -31,4 +31,5 @@ public class User {
         Log.d("writeNewUser", "userDatabase: " + userDatabase);
         Log.d("writeNewUser", "userDatabase + uid: " + userDatabase.child(userId));
     }
+
 }
